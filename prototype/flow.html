@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>펫 드라이브 화면 흐름</title>
+<link rel="stylesheet" href="../design/screens/base.css">
+<style>
+  html, body { height: 100%; background: #131417; }
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #fff; }
+  .stage { position: relative; width: min(96vw, calc((100vh - 120px) * 16 / 9)); aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #fff; }
+  .stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity .35s; }
+  .stage img.on { opacity: 1; }
+  .hot { position: absolute; cursor: pointer; border-radius: 12px; }
+  .hot:hover { box-shadow: 0 0 0 3px rgba(2,194,101,.7); }
+  .bar { display: flex; align-items: center; gap: 16px; font-size: 18px; }
+  .bar button { font: inherit; font-weight: 700; height: 44px; padding: 0 18px; border-radius: 12px; border: 0; background: #313236; color: #fff; cursor: pointer; }
+  .bar .cap { min-width: 520px; text-align: center; color: #E0E1E6; }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 8px; height: 8px; border-radius: 4px; background: #44464E; }
+  .dots i.on { background: #02C265; width: 22px; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+<div class="bar">
+  <button id="prev">이전</button>
+  <div><div class="cap" id="cap"></div><div class="dots" id="dots" style="justify-content:center;margin-top:8px"></div></div>
+  <button id="next">다음</button>
+</div>
+<script>
+// 화면과 다음 장면으로 넘어가는 누를 곳(화면 기준 비율 좌표: x, y, w, h)
+const S = [
+  { img: '00a-boarding', cap: '출발: 콩이와 동승, 반려견 휴게소가 경유지에 들어가요', hot: [0.684, 0.733, 0.272, 0.115] },
+  { img: '04a-driving-low', cap: '주행: 멀미 위험 편안 (22점)' },
+  { img: '04-driving-rest', cap: '주행: 급정거가 이어져 주의 (58점), 음성으로 안내' },
+  { img: '04c-driving-high', cap: '주행: 위험 (81점), 가까운 반려견 휴게소 안내' },
+  { img: '01-guard-start', cap: '정차: 펫 지킴이 켜기', hot: [0.700, 0.733, 0.256, 0.115] },
+  { img: '02-guard-active', cap: '작동: 바깥 사람에게 센서로 확인한 사실만' },
+  { img: '05-phone', cap: '보호자 휴대폰: 실시간 온도와 기록', phone: true },
+  { img: '03-guard-danger', cap: '위험: 에어컨이 멈추면 차가 대응하고 보호자를 불러요' },
+  { img: '05b-phone-alert', cap: '보호자 휴대폰: 바로 돌아오라는 알림', phone: true },
+  { img: '06-arrival', cap: '도착: 말로 컨디션 기록, 다음 쉬는 간격 조정', hot: [0.700, 0.746, 0.256, 0.102] },
+];
+const stage = document.getElementById('stage');
+S.forEach((s, i) => {
+  const im = document.createElement('img');
+  im.src = `../design/png/${s.img}.png`; im.alt = s.cap;
+  if (s.phone) im.style.background = '#F7F8FA';
+  stage.appendChild(im); s.el = im;
+});
+document.getElementById('dots').innerHTML = S.map(() => '<i></i>').join('');
+let cur = 0;
+function show(i) {
+  cur = (i + S.length) % S.length;
+  S.forEach((s, k) => s.el.classList.toggle('on', k === cur));
+  document.getElementById('cap').textContent = `${cur + 1}/${S.length}  ${S[cur].cap}`;
+  document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === cur));
+  stage.querySelectorAll('.hot').forEach(h => h.remove());
+  const h = S[cur].hot;
+  if (h) {
+    const d = document.createElement('div'); d.className = 'hot';
+    Object.assign(d.style, { left: h[0] * 100 + '%', top: h[1] * 100 + '%', width: h[2] * 100 + '%', height: h[3] * 100 + '%' });
+    d.title = '눌러서 다음으로'; d.onclick = e => { e.stopPropagation(); show(cur + 1); };
+    stage.appendChild(d);
+  }
+}
+document.getElementById('next').onclick = () => show(cur + 1);
+document.getElementById('prev').onclick = () => show(cur - 1);
+stage.onclick = () => show(cur + 1);
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') show(cur + 1);
+  if (e.key === 'ArrowLeft') show(cur - 1);
+});
+show(0);
+</script>
+</body>
+</html>

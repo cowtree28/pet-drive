@@ -1,0 +1,41 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="../base.css"><style>
+.win.full{background:var(--basic-50)}
+.v{height:100%;display:grid;grid-template-columns:640px 1fr;align-items:center;padding:0 64px;gap:40px}
+.v .msg{font-size:68px;font-weight:800;line-height:1.2;letter-spacing:-1px}
+.v .sub{font-size:30px;color:var(--basic-500);margin-top:28px;line-height:1.6}
+</style></head><body>
+<div class="ivi">
+  <div class="statusbar"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#313236" stroke-width="2" stroke-linecap="round"><path d="M4 18h2M9 15v3M14 11v7M19 7v11"/></svg><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#313236" stroke-width="2" stroke-linecap="round"><path d="M12 4a7 7 0 0 0-7 7v4l-2 3h18l-2-3v-4a7 7 0 0 0-7-7zM10 21h4"/></svg><span>14:08</span></div>
+  <div class="driving">
+    <div class="speed">0</div><div class="unit">km/h</div>
+    <div class="gear"><b>P</b>RND</div>
+    <svg class="scene" width="640" height="660" viewBox="0 0 640 660">
+  <polygon points="250,0 390,0 600,660 40,660" fill="#F7F8FA"/>
+  <line x1="297" y1="0" x2="215" y2="660" stroke="#E0E1E6" stroke-width="6" />
+  <line x1="343" y1="0" x2="425" y2="660" stroke="#E0E1E6" stroke-width="6" />
+  <line x1="250" y1="0" x2="40" y2="660" stroke="#C7C9CE" stroke-width="4"/>
+  <line x1="390" y1="0" x2="600" y2="660" stroke="#C7C9CE" stroke-width="4"/>
+  <g transform="translate(320 520)">
+    <rect x="-74" y="-46" width="148" height="92" rx="26" fill="#44464E"/>
+    <rect x="-56" y="-70" width="112" height="44" rx="16" fill="#686A72"/>
+    <rect x="-64" y="2" width="30" height="10" rx="5" fill="#A4A8AE"/>
+    <rect x="34" y="2" width="30" height="10" rx="5" fill="#A4A8AE"/>
+  </g>
+</svg>
+  </div>
+  <div class="win full"><div class="v"><svg width="640" height="640" viewBox="0 0 640 640">
+<circle cx="320" cy="320" r="310" fill="#fff" stroke="#E0E1E6" stroke-width="2"/>
+<path d="M 129.1 510.9 A 270 270 0 0 1 403.4 63.2" fill="none" stroke="#02C265" stroke-width="30"/>
+<path d="M 419.4 69.0 A 270 270 0 0 1 510.9 510.9" fill="none" stroke="#FE3D16" stroke-width="30"/>
+<g font-family="Asta Sans" font-size="30" fill="#686A72" text-anchor="middle"><text x="156" y="494">10</text><text x="156" y="166">20</text><text x="484" y="166">30</text><text x="484" y="494">40</text></g>
+<line x1="320" y1="320" x2="224.7" y2="132.9" stroke="#131417" stroke-width="10" stroke-linecap="round"/>
+<circle cx="320" cy="320" r="24" fill="#131417"/>
+<text x="320" y="500" text-anchor="middle" font-family="Asta Sans" font-size="110" font-weight="700" fill="#131417">22℃</text>
+<text x="320" y="560" text-anchor="middle" font-family="Asta Sans" font-size="26" fill="#686A72">27℃부터 위험</text></svg>
+<div><div class="msg">보호자가<br>곧 돌아옵니다</div><div class="sub">에어컨 켜짐, 문 잠김<br>보호자가 떠난 지 6분</div></div></div></div>
+  <div class="gnb">
+    <div class="climate"><span>‹</span><div>22.0<small>AUTO</small></div><span>›</span></div>
+    <div class="apps"><div class="app"></div><div class="app"></div><div class="app"></div><div class="app me"><svg width="32" height="32" viewBox="0 0 24 24" fill="#fff"><ellipse cx="6" cy="9" rx="2.2" ry="2.8"/><ellipse cx="10" cy="5.5" rx="2.2" ry="2.8"/><ellipse cx="14.5" cy="5.5" rx="2.2" ry="2.8"/><ellipse cx="18.5" cy="9" rx="2.2" ry="2.8"/><path d="M12.2 11c-3.2 0-6.2 3.6-6.2 6.4 0 1.9 1.4 2.9 3.1 2.9 1.3 0 2-.6 3.1-.6s1.8.6 3.1.6c1.7 0 3.1-1 3.1-2.9 0-2.8-3-6.4-6.2-6.4z"/></svg></div><div class="app"></div><div class="app"></div><div class="app"></div></div>
+    <div class="climate"><span>‹</span><div>22.0<small>AUTO</small></div><span>›</span></div>
+  </div>
+</div></body></html>
