@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>펫 드라이브 — 멀미 케어 시뮬레이터</title>
+<link rel="stylesheet" href="../design/screens/base.css">
+<style>
+  body { background: var(--basic-50); padding: 40px; }
+  .wrap { display: grid; grid-template-columns: 560px 1fr; gap: 32px; max-width: 1400px; margin: 0 auto; align-items: start; }
+  h1 { font-size: 32px; font-weight: 800; letter-spacing: -.5px; }
+  .lead { font-size: 17px; color: var(--basic-500); margin: 8px 0 28px; line-height: 1.6; }
+  .panel { background: #fff; border-radius: 28px; box-shadow: 0 0 0 1px var(--basic-100); padding: 40px 44px; }
+  .who { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 700; }
+  .ringbox { position: relative; width: 320px; height: 320px; margin: 24px auto 0; }
+  .ringbox svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .ringbox circle { transition: stroke-dashoffset .4s, stroke .4s; }
+  .rc { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .lv { font-size: 84px; font-weight: 800; letter-spacing: -3px; line-height: 1; }
+  .sc { font-size: 20px; color: var(--basic-500); margin-top: 12px; font-weight: 600; }
+  .parts { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 28px; border-top: 1px solid var(--basic-100); }
+  .parts div { padding: 16px 0 0; }
+  .parts span { display: block; font-size: 14px; color: var(--basic-500); }
+  .parts b { font-size: 22px; }
+  .acts { list-style: none; margin-top: 24px; min-height: 150px; }
+  .acts li { padding: 14px 0; border-top: 1px solid var(--basic-100); font-size: 19px; font-weight: 600; display: flex; justify-content: space-between; gap: 12px; }
+  .acts li em { font-style: normal; font-size: 14px; color: var(--basic-500); font-weight: 600; white-space: nowrap; }
+  .acts .none { color: var(--basic-500); font-weight: 500; }
+  .ctl label { display: block; margin-top: 26px; }
+  .ctl .row { display: flex; justify-content: space-between; font-size: 17px; font-weight: 700; }
+  .ctl .row span { color: var(--basic-500); font-weight: 600; }
+  .ctl input[type=range] { width: 100%; margin-top: 10px; accent-color: #313236; }
+  .ctl .hint { font-size: 14px; color: var(--basic-500); margin-top: 4px; }
+  .toggle { display: flex; align-items: center; gap: 12px; margin-top: 28px; font-size: 17px; font-weight: 700; }
+  .toggle input { width: 22px; height: 22px; accent-color: #313236; }
+  .presets { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .presets button { font: inherit; font-size: 15px; font-weight: 700; height: 40px; padding: 0 16px; border-radius: 12px; border: 0; background: rgba(19,20,23,.06); cursor: pointer; }
+  .presets button:hover { background: rgba(19,20,23,.12); }
+  .formula { margin-top: 28px; font-size: 14px; color: var(--basic-500); line-height: 1.7; border-top: 1px solid var(--basic-100); padding-top: 18px; }
+  .gallery { max-width: 1400px; margin: 40px auto 0; }
+  .gallery h2 { font-size: 24px; font-weight: 800; }
+  .gallery .g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 16px; }
+  .gallery figure img { width: 100%; border-radius: 14px; box-shadow: 0 0 0 1px var(--basic-200); display: block; }
+  .gallery figcaption { font-size: 15px; font-weight: 600; margin-top: 8px; color: var(--basic-700); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <div class="who">콩이 멀미 위험</div>
+    <div class="ringbox">
+      <svg width="320" height="320"><circle cx="160" cy="160" r="145" stroke="#EDEEF2" stroke-width="30" fill="none"/>
+        <circle id="arc" cx="160" cy="160" r="145" stroke="#313236" stroke-width="30" fill="none" stroke-linecap="round" stroke-dasharray="911" stroke-dashoffset="911"/></svg>
+      <div class="rc"><div class="lv" id="lv">-</div><div class="sc" id="sc">-</div></div>
+    </div>
+    <div class="parts">
+      <div><span>급가감속</span><b id="p1">0</b></div>
+      <div><span>휴식 경과</span><b id="p2">0</b></div>
+      <div><span>차 안 온도</span><b id="p3">0</b></div>
+      <div><span>보호자 음성</span><b id="p4">0</b></div>
+    </div>
+    <ul class="acts" id="acts"></ul>
+  </div>
+
+  <div>
+    <h1>멀미 케어 시뮬레이터</h1>
+    <p class="lead">차량 신호를 바꿔 보면서 멀미 위험 점수와 차가 하는 일을 확인할 수 있어요. 계산은 앱의 <code>MotionRiskScorer</code>, <code>CarePolicy</code>와 같은 규칙이에요.</p>
+    <div class="panel ctl">
+      <div class="row">예시 상황</div>
+      <div class="presets">
+        <button data-p="1,42,23">출발 직후</button>
+        <button data-p="5,67,24.3">정체 구간 급정거</button>
+        <button data-p="7,74,25.9">오래 달려 더워짐</button>
+      </div>
+      <label><div class="row">최근 10분 급가감속<span id="v1"></span></div>
+        <input id="harsh" type="range" min="0" max="12" step="1" value="5">
+        <div class="hint">브레이크 신호와 속도 변화로 감지 (2.5m/s² 이상)</div></label>
+      <label><div class="row">마지막 휴식 후<span id="v2"></span></div>
+        <input id="rest" type="range" min="0" max="150" step="1" value="67"></label>
+      <label><div class="row">차 안 온도<span id="v3"></span></div>
+        <input id="temp" type="range" min="18" max="32" step="0.1" value="24.3"></label>
+      <div class="toggle"><button id="voice" type="button" style="font:inherit;font-size:15px;font-weight:700;height:44px;padding:0 18px;border-radius:12px;border:0;background:#131417;color:#fff;cursor:pointer">보호자: “콩이 헥헥거려”</button><span id="vc" style="color:#686A72;font-weight:600"></span></div>
+      <div class="toggle"><input id="sens" type="checkbox" checked><span>멀미가 있는 반려견</span></div>
+      <div class="toggle"><input id="ctrl" type="checkbox"><span>차량 제어 SDK 사용 가능 (확장 단계)</span></div>
+      <div class="formula">점수 = 급가감속(최대 50) + 휴식 경과(최대 30) + 실내 온도(최대 20)<br>
+        멀미가 있으면 급가감속 8회, 휴식 80분에서 최대. 없으면 12회, 110분.<br>
+        보호자가 반려견이 힘들어한다고 말하면 1회 15점(최대 30점, 15분 유지).<br>
+        40점 미만 편안, 70점 미만 주의, 그 이상 위험.</div>
+    </div>
+  </div>
+</div>
+
+<div class="gallery">
+  <h2>화면 흐름</h2>
+  <div class="g">
+    <figure><img src="../design/png/00a-boarding.png"><figcaption>출발: 반려견 휴게소 경유지 자동 추가</figcaption></figure>
+    <figure><img src="../design/png/04a-driving-low.png"><figcaption>주행: 멀미 위험 편안</figcaption></figure>
+    <figure><img src="../design/png/04-driving-rest.png"><figcaption>주행: 급정거로 주의</figcaption></figure>
+    <figure><img src="../design/png/04c-driving-high.png"><figcaption>주행: 위험, 휴게소 안내</figcaption></figure>
+    <figure><img src="../design/png/01-guard-start.png"><figcaption>정차: 펫 지킴이 켜기</figcaption></figure>
+    <figure><img src="../design/png/02-guard-active.png"><figcaption>정차: 바깥 사람에게 사실 안내</figcaption></figure>
+    <figure><img src="../design/png/03-guard-danger.png"><figcaption>위험: 차가 스스로 대응</figcaption></figure>
+    <figure><img src="../design/png/06-arrival.png"><figcaption>도착: 말로 컨디션 기록, 다음 주행 조정</figcaption></figure>
+  </div>
+</div>
+
+<script>
+// MotionRiskScorer.score / CarePolicy.decide 와 같은 규칙 (app/src/main/java/ai/petdrive/core)
+const C = 2 * Math.PI * 145;
+const clamp01 = v => Math.max(0, Math.min(1, v));
+let reports = 0;
+function score(sensitive, harsh, minutes, temp) {
+  const maxHarsh = sensitive ? 8 : 12, restMin = sensitive ? 80 : 110;
+  const h = 50 * clamp01(harsh / maxHarsh), r = 30 * clamp01(minutes / restMin), t = 20 * clamp01((temp - 24) / 4);
+  const v = Math.min(30, reports * 15);
+  const total = Math.max(0, Math.min(100, Math.round(h + r + t) + v));
+  return { total, h, r, t, v, level: total < 40 ? '편안' : total < 70 ? '주의' : '위험' };
+}
+function decide(res, harsh, temp, ctrl) {
+  const out = [];
+  if (res.level === '편안') return out;
+  if (harsh >= 3) out.push(['음성 코칭: “급정거가 잦았어요. 부드럽게 운전해 주세요”', 'TextToSpeech']);
+  if (ctrl) out.push(['뒷창문 2cm 열어 환기', 'set-window-position']);
+  if (res.level === '위험') {
+    out.push(['가까운 반려견 휴게소를 경유지로 제안', 'NaviHelper']);
+    if (ctrl && temp > 23) out.push(['뒷좌석 공조 22℃로 낮춤', 'set-hvac-dual']);
+  }
+  return out;
+}
+const $ = id => document.getElementById(id);
+function update() {
+  const harsh = +$('harsh').value, rest = +$('rest').value, temp = +$('temp').value;
+  const sens = $('sens').checked, ctrl = $('ctrl').checked;
+  $('vc').textContent = reports ? `음성 신호 ${reports}회 (+${Math.min(30, reports * 15)}점)` : '';
+  $('v1').textContent = harsh + '회'; $('v2').textContent = rest + '분'; $('v3').textContent = temp + '℃';
+  const r = score(sens, harsh, rest, temp);
+  const color = r.level === '편안' ? '#02C265' : r.level === '주의' ? '#F59E0B' : '#FE3D16';
+  $('arc').style.strokeDashoffset = C * (1 - r.total / 100); $('arc').style.stroke = color;
+  $('lv').textContent = r.level; $('lv').style.color = r.level === '위험' ? '#FE3D16' : r.level === '주의' ? '#B45309' : '#131417';
+  $('sc').textContent = '100점 중 ' + r.total;
+  $('p1').textContent = Math.round(r.h) + '점'; $('p2').textContent = Math.round(r.r) + '점'; $('p3').textContent = Math.round(r.t) + '점'; $('p4').textContent = r.v + '점';
+  const acts = decide(r, harsh, temp, ctrl);
+  $('acts').innerHTML = acts.length
+    ? acts.map(([t, s]) => `<li><span>${t}</span><em>${s}</em></li>`).join('')
+    : '<li class="none">콩이가 편안해요. 화면에 상태만 보여 줘요.</li>';
+}
+document.querySelectorAll('input').forEach(i => i.addEventListener('input', update));
+document.querySelectorAll('.presets button').forEach(b => b.addEventListener('click', () => {
+  const [h, m, t] = b.dataset.p.split(',');
+  $('harsh').value = h; $('rest').value = m; $('temp').value = t; reports = 0; update();
+}));
+$('voice').addEventListener('click', () => { reports = Math.min(2, reports + 1); update(); });
+update();
+</script>
+</body>
+</html>

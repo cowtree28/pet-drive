@@ -1,0 +1,58 @@
+/* Pleos Connect 디자인 가이드 토큰 (Light) — document.pleos.ai foundations/colors
+   폰트: Asta Sans (Pleos 시스템 UI 폰트, 42dot, OFL) */
+@font-face { font-family: "Asta Sans"; src: url("fonts/AstaSans.ttf") format("truetype"); font-weight: 300 800; }
+
+:root {
+  --basic-00: #FFFFFF;
+  --basic-50: #F7F8FA;
+  --basic-100: #EDEEF2;
+  --basic-200: #E0E1E6;
+  --basic-300: #C7C9CE;
+  --basic-400: #A4A8AE;
+  --basic-500: #686A72;
+  --basic-600: #44464E;
+  --basic-700: #313236;
+  --basic-800: #1D1E21;
+  --basic-900: #131417;
+  --active: #02C265;
+  --positive: #0064FF;
+  --negative: #FE3D16;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Asta Sans", sans-serif; color: var(--basic-900); background: #fff; -webkit-font-smoothing: antialiased; word-break: keep-all; font-feature-settings: "tnum"; }
+
+/* ---------- 차량 디스플레이 프레임 (Connect-S, 1920x1080) ---------- */
+.ivi { width: 1920px; height: 1080px; position: relative; background: var(--basic-00); overflow: hidden; }
+
+.statusbar { position: absolute; top: 0; left: 640px; right: 0; height: 64px; display: flex; align-items: center; justify-content: flex-end; gap: 30px; padding-right: 44px; color: var(--basic-700); font-size: 24px; font-weight: 600; }
+.statusbar svg { display: block; }
+
+/* 주행 정보 — 현대차 시스템 UI. 앱 영역과 구분되도록 채도 없이 단순하게 */
+.driving { position: absolute; top: 0; left: 0; width: 640px; bottom: 112px; }
+.driving .speed { position: absolute; left: 40px; top: 28px; font-size: 64px; font-weight: 700; line-height: 1; }
+.driving .unit { position: absolute; left: 42px; top: 100px; font-size: 20px; color: var(--basic-500); }
+.driving .gear { position: absolute; left: 190px; top: 46px; font-size: 22px; font-weight: 700; letter-spacing: 8px; color: var(--basic-300); }
+.driving .gear b { color: var(--basic-900); }
+.driving svg.scene { position: absolute; left: 0; top: 150px; }
+
+/* GNB */
+.gnb { position: absolute; left: 0; right: 0; bottom: 0; height: 112px; display: flex; align-items: center; justify-content: space-between; padding: 0 44px; }
+.gnb .climate { display: flex; align-items: center; gap: 16px; color: var(--basic-500); font-size: 26px; }
+.gnb .climate div { color: var(--basic-800); font-size: 30px; font-weight: 600; text-align: center; line-height: 1.1; }
+.gnb .climate small { display: block; font-size: 14px; color: var(--basic-500); font-weight: 600; }
+.gnb .apps { display: flex; gap: 20px; align-items: center; }
+.gnb .app { width: 58px; height: 58px; border-radius: 16px; background: var(--basic-100); }
+.gnb .app.me { background: var(--basic-800); display: grid; place-items: center; position: relative; }
+.gnb .app.me::after { content: ""; position: absolute; bottom: -12px; width: 6px; height: 6px; border-radius: 3px; background: var(--basic-800); }
+
+/* 앱 창 */
+.win { position: absolute; top: 64px; bottom: 112px; border-radius: 28px; background: var(--basic-00); box-shadow: 0 0 0 1px var(--basic-100); overflow: hidden; }
+.win.full { left: 660px; right: 20px; }
+.win.a { left: 660px; width: 610px; }
+.win.b { left: 1290px; right: 20px; }
+
+.btn { display: flex; align-items: center; justify-content: center; border-radius: 20px; font-weight: 700; }
+.btn.filled { background: var(--basic-600); color: #fff; }
+.btn.basic { background: rgba(19,20,23,.05); color: var(--basic-900); }
+.muted { color: var(--basic-500); }
