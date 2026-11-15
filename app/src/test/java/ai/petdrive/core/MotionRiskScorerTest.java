@@ -84,6 +84,16 @@ public final class MotionRiskScorerTest {
         tuner.onArrivalReport(ProfileTuner.Condition.VOMITED); tuner.onArrivalReport(ProfileTuner.Condition.VOMITED);
         check("간격은 50분 아래로 내려가지 않음", tuner.restIntervalMinutes() == 50);
 
+        // 정차 중 차 안 온도 어림 (CabinHeat)
+        check("에어컨 켜짐: 설정 온도로 내려감", CabinHeat.nextMinute(30, 33, true, 22) < 30);
+        check("에어컨 꺼짐: 바깥이 더우면 올라감", CabinHeat.nextMinute(22, 33, false, 22) > 22);
+        check("에어컨 꺼짐: 바깥이 추우면 오르지 않음", CabinHeat.nextMinute(22, 5, false, 22) == 22);
+        check("에어컨 꺼짐, 바깥 33℃: 22℃에서 27℃ 넘기까지 5분 안팎",
+                Math.abs(CabinHeat.minutesUntil(22, 33, false, 22, 27) - 4) <= 1);
+        check("에어컨 켜짐이면 27℃를 넘지 않음", CabinHeat.minutesUntil(22, 33, true, 22, 27) == -1);
+        check("바깥이 더 더우면 더 빨리 위험해짐",
+                CabinHeat.minutesUntil(22, 38, false, 22, 27) < CabinHeat.minutesUntil(22, 28, false, 22, 27));
+
         System.out.println(failed == 0 ? "ALL PASS" : failed + " FAILED");
         if (failed > 0) System.exit(1);
     }
