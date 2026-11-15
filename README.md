@@ -74,7 +74,7 @@ sh tools/build_apk.sh        # build/apk/petdrive-demo.apk (Gradle 없이 SDK �
 adb install -r build/apk/petdrive-demo.apk
 ```
 
-주행 / 펫 지킴이 / 도착 3화면이에요. 점수 계산은 위 `core` 클래스를 그대로 써요. Pleos 차량·에뮬레이터에서는 Pleos Vehicle SDK(브레이크, 실내 온도, 에어컨, 기어)와 CarPropertyManager(속도)로 차량 신호를 받고, NaviHelper로 목적지 경로와 반려견 휴게소 경유지를 넣고, 음성은 Pleos TTS·STT를 써요. 일반 기기에서는 가상 주행 기록(60배속)으로 동작해요. "급정거", "콩이 힘들어해" 버튼으로 값을 직접 넣어 볼 수 있어요. 안드로이드 에뮬레이터(API 34, 1920x1080)에서 실행한 녹화는 `design/video/app-run.mp4`예요.
+주행 / 펫 지킴이 / 도착 3화면이에요. 점수 계산은 위 `core` 클래스를 그대로 써요. Pleos 차량·에뮬레이터에서는 Pleos Vehicle SDK(브레이크, 실내 온도, 에어컨, 기어)와 CarPropertyManager(속도)로 차량 신호를 받고, NaviHelper로 목적지 경로와 반려견 휴게소 경유지를 넣고, 음성은 Pleos TTS·STT, 바깥 기온은 FusedLocation 위치로 받아요(공모전 SDK 5종 모두 사용). 일반 기기에서는 가상 주행 기록(60배속)으로 동작해요. "급정거", "콩이 힘들어해" 버튼으로 값을 직접 넣어 볼 수 있어요. 안드로이드 에뮬레이터(API 34, 1920x1080)에서 실행한 녹화는 `design/video/app-run.mp4`예요.
 
 ## 테스트 환경
 
