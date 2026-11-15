@@ -101,7 +101,14 @@ def demo(out):
          '-map', '[v]', '-c:v', 'libx264', '-crf', '21', '-pix_fmt', 'yuv420p', out])
 
 
-def build(out, card_id, holds):
+def roll(out):
+    """'7/10'의 7이 숫자판처럼 0에서 7까지 굴러 내려와 멈춘다 (design/logo/roll/ 36장, 1.2초)."""
+    run(['-framerate', '30', '-i', os.path.join(L, 'roll', 'f%03d.png'),
+         '-vf', 'scale=1920:1080,format=yuv420p,fade=t=in:st=0:d=0.3', '-c:v', 'libx264', '-crf', '20',
+         '-pix_fmt', 'yuv420p', out])
+
+
+def build(out, card_id, holds, fade_in=True):
     """읽는 순서대로 내용이 하나씩 나타난다 (b-<카드>-<단계>.png를 차례로 겹쳐 넘김)."""
     xf = 0.35
     args, chain = [], []
@@ -113,14 +120,16 @@ def build(out, card_id, holds):
         chain.append(f'[{last}][s{i}]xfade=transition=fade:duration={xf}:offset={off - xf}[x{i}]')
         last, off = f'x{i}', off + holds[i]
     total = sum(holds)
-    chain.append(f'[{last}]fade=t=in:st=0:d=0.4,fade=t=out:st={total - 0.4}:d=0.4,trim=duration={total}[v]')
+    fin = 'fade=t=in:st=0:d=0.4,' if fade_in else ''
+    chain.append(f'[{last}]{fin}fade=t=out:st={total - 0.4}:d=0.4,trim=duration={total}[v]')
     run(args + ['-filter_complex', ';'.join(chain), '-map', '[v]', '-c:v', 'libx264', '-crf', '20',
                 '-pix_fmt', 'yuv420p', out])
 
 
 segs = []
 for name, fn in [('s1', lambda o: intro(o, 6.5)),
-                 ('s2', lambda o: build(o, 'a', [3.0, 3.0, 3.8])),
+                 ('s2r', roll),
+                 ('s2', lambda o: build(o, 'a', [2.2, 3.0, 3.8], fade_in=False)),
                  ('s3', lambda o: build(o, 'b', [3.0, 2.8, 3.8])),
                  ('s4', lambda o: build(o, 'c', [3.0, 2.6, 2.6, 4.0])),
                  ('s5', demo),
