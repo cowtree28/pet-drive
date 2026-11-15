@@ -11,7 +11,15 @@ body{margin:0;width:1920px;height:1080px;background:#F7F8FA;font-family:Asta;wor
 .box .v{font-size:50px;font-weight:800;margin-top:14px;letter-spacing:-1px;white-space:nowrap}
 .box .d{font-size:27px;color:#44464E;margin-top:16px;line-height:1.55}
 .box.no{background:#1D1E21;box-shadow:none}.box.no .t{color:#9C9EA6}.box.no .v{color:#fff}.box.no .d{color:#C7C9CE}
-.one{font-size:60px;font-weight:700;color:#A4A8AE;margin-top:72px;letter-spacing:-1px}.one b{color:#131417;font-weight:800}.src{font-size:22px;color:#9C9EA6;margin-top:40px}
+.one{font-size:60px;font-weight:700;color:#A4A8AE;margin-top:72px;letter-spacing:-1px}.one b{color:#131417;font-weight:800}.tbl{margin-top:56px;background:#FFFFFF;border-radius:28px;box-shadow:0 0 0 1px #EDEEF2,0 8px 24px rgba(19,20,23,.04);padding:12px 48px}
+.tr{display:grid;grid-template-columns:400px 1fr 1.25fr;align-items:center;padding:24px 0;border-top:1px solid #EDEEF2}
+.tr.hd{border-top:0;padding:18px 0 14px}.tr.hd div{font-size:24px;font-weight:700;color:#A4A8AE}.tr.hd div:last-child{color:#02C265}
+.tr .q{font-size:30px;font-weight:700;color:#313236}.tr .ph{font-size:30px;color:#A4A8AE}
+.tr .car{font-size:32px;font-weight:800;color:#131417}.tr .car small{font-size:22px;font-weight:700;color:#686A72;margin-left:14px;padding:4px 12px;border-radius:10px;background:#EDEEF2}
+.tr.s{display:grid}.tr.s:not(.on){opacity:0}
+.mk{display:flex;align-items:flex-end;gap:28px;margin-top:40px}.mk .roll{height:180px}.mk .big small{font-size:72px;color:#131417;letter-spacing:-2px}
+.mk .lab{font-size:28px;color:#686A72;font-weight:700;margin-bottom:20px}
+.src{font-size:22px;color:#9C9EA6;margin-top:40px}
 .big{font-size:180px;font-weight:800;letter-spacing:-6px;line-height:1;display:flex;align-items:flex-end}.roll{display:inline-block;height:180px;overflow:hidden}.strip{display:block;line-height:180px}
 .big small{font-size:64px;letter-spacing:0;color:#686A72;font-weight:700}
 .n{font-size:27px;color:#02C265;font-weight:700}
@@ -30,6 +38,16 @@ a:`<div class="k">왜 필요할까요</div>
 b:`<div class="h" style="font-size:84px">차의 펫 모드가 챙기는 건<br>한 가지뿐입니다</div>
  ${S(1,`<div class="one"><b>달리는 동안</b>의 멀미는 아무도 챙기지 않습니다</div>`)}`,
 
+d:`<div class="k">왜 휴대폰 앱이 아니라 차량 앱일까요</div><div class="h">반려견 멀미의 원인은 모두 차 안에 있습니다</div>
+ <div class="tbl"><div class="tr hd"><div></div><div>휴대폰 앱</div><div>펫 드라이브 · Pleos 차량 앱</div></div>
+ <div class="tr s ${n>=1?'on':''}"><div class="q">급정거 · 속도 · 차 안 온도</div><div class="ph">알 수 없음</div><div class="car">센서로 바로 읽음<small>Vehicle</small></div></div>
+ <div class="tr s ${n>=2?'on':''}"><div class="q">운전 중 조작</div><div class="ph">손댈 수 없음</div><div class="car">음성으로 안내 · 기록<small>TTS · STT</small></div></div>
+ <div class="tr s ${n>=3?'on':''}"><div class="q">쉬어 갈 휴게소</div><div class="ph">경로를 못 바꿈</div><div class="car">내비 경유지에 바로 추가<small>NaviHelper</small></div></div>
+ <div class="tr s ${n>=4?'on':''}"><div class="q">주차 중 반려견</div><div class="ph">보호자와 함께 떠남</div><div class="car">차에 남아 에어컨 상태 감시<small>Vehicle</small></div></div></div>`,
+e:`<div class="k">누가 쓸까요</div>
+ <div class="mk"><div class="big"><span class="roll"><span class="strip" style="transform:translateY(${-180*9*(1-P)}px)">591<br>590<br>580<br>560<br>520<br>450<br>360<br>240<br>110<br>0</span></span><small>만</small></div><div class="lab">반려가구 (KB경영연구소, 2025)</div></div>
+ <div class="h" style="margin-top:44px">병원, 미용, 나들이, 여행.<br>반려견을 태울 때마다 켜지는 앱</div>
+ ${S(1,`<div class="one" style="font-size:44px;margin-top:48px"><b>Pleos Connect</b>가 들어간 현대차그룹 차량이면 어디서나</div>`)}`,
 c:`<div class="k">펫 드라이브는</div><div class="h">달리는 동안부터 세워 둘 때까지<br>차가 반려견을 챙깁니다</div>
  <div class="row">${S(1,`<div class="box"><div class="n">달리는 동안</div><div class="v">멀미 위험 측정</div><div class="d">급정거·쉬지 않은 시간·차 안 온도로 점수를 매기고 음성으로 알립니다</div></div>`)}
  ${S(2,`<div class="box"><div class="n">위험해지면</div><div class="v">쉴 곳 안내</div><div class="d">반려견 놀이터가 있는 휴게소를 내비 경유지에 넣습니다</div></div>`)}
