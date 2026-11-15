@@ -44,6 +44,8 @@
 
     <application
         android:label="펫 드라이브"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="false"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <!-- 주행 중 화면은 Distraction Optimization 선언 대상 (Pleos 주행 규제 정책) -->

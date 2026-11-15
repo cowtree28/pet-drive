@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 펫 드라이브 앱 아이콘: 검은 바탕, 흰 강아지 발바닥 -->
+  <rect width="100" height="100" rx="22" fill="#131417"/>
+  <g fill="#FFFFFF">
+    <path d="M50 52c-10.5 0-21 9.6-21 20.4 0 7.4 5.4 11.6 11.2 10.4 4.1-.8 6.4-2.6 9.8-2.6s5.7 1.8 9.8 2.6C65.6 84 71 79.8 71 72.4 71 61.6 60.5 52 50 52z"/>
+    <ellipse cx="28.5" cy="44" rx="7" ry="9" transform="rotate(-24 28.5 44)"/>
+    <ellipse cx="41.5" cy="31" rx="7.4" ry="9.6" transform="rotate(-8 41.5 31)"/>
+    <ellipse cx="58.5" cy="31" rx="7.4" ry="9.6" transform="rotate(8 58.5 31)"/>
+    <ellipse cx="71.5" cy="44" rx="7" ry="9" transform="rotate(24 71.5 44)"/>
+  </g>
+</svg>

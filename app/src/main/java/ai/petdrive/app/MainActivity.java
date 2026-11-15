@@ -208,6 +208,13 @@ public final class MainActivity extends Activity {
         sourceLabel.setSingleLine(true);
         sourceLabel.setEllipsize(android.text.TextUtils.TruncateAt.END);
         LinearLayout left = Ui.row(this);
+        android.widget.ImageView logo = new android.widget.ImageView(this);
+        logo.setImageResource(ai.petdrive.R.mipmap.ic_launcher);
+        logo.setClipToOutline(true);
+        logo.setBackground(Ui.round(Ui.INK, 0, 10));
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(44, 44);
+        llp.rightMargin = 14;
+        left.addView(logo, llp);
         left.addView(title);
         left.addView(sourceLabel, new LinearLayout.LayoutParams(0, -2, 1));
         bar.addView(left, new LinearLayout.LayoutParams(0, -2, 1));
