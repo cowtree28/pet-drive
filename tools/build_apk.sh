@@ -10,4 +10,5 @@ export ANDROID_HOME=${ANDROID_HOME:-$HOME/Android/Sdk}
 ${GRADLE:-gradle} -q assembleRelease
 mkdir -p build/apk
 cp app/build/outputs/apk/release/app-release.apk build/apk/petdrive-demo.apk
+mkdir -p apk && cp build/apk/petdrive-demo.apk "apk/대방어_펫드라이브_release.apk"  # 공모전 규칙: 저장소 apk/ 폴더, 팀명_앱이름_release.apk
 echo "ok build/apk/petdrive-demo.apk"
