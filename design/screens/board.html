@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="base.css">
+<style>
+  body { background: #fff; }
+  .board { width: 2560px; height: 1600px; padding: 80px 96px; display: flex; flex-direction: column; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; }
+  h1 { font-size: 64px; font-weight: 700; letter-spacing: -1.5px; }
+  header p { font-size: 28px; color: var(--basic-500); margin-top: 12px; }
+  .sdk { display: flex; gap: 10px; }
+  .sdk span { height: 48px; padding: 0 20px; border-radius: 24px; background: var(--basic-50); border: 1px solid var(--basic-200); display: flex; align-items: center; font-size: 22px; font-weight: 700; color: var(--basic-700); }
+  .sdk em { font-style: normal; font-size: 22px; color: var(--basic-500); align-self: center; margin-right: 6px; }
+
+  .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 56px; }
+  .shot img { width: 100%; display: block; border-radius: 16px; box-shadow: 0 0 0 1px var(--basic-200); }
+  .shot h3 { font-size: 30px; font-weight: 700; margin-top: 24px; }
+  .shot h3 small { font-size: 22px; color: var(--basic-500); font-weight: 600; margin-right: 12px; }
+  .shot ul { list-style: none; margin-top: 14px; }
+  .shot li { font-size: 21px; color: var(--basic-700); padding: 6px 0; display: flex; gap: 12px; }
+  .shot li code { font-family: inherit; font-weight: 700; color: var(--basic-900); background: var(--basic-50); padding: 0 8px; border-radius: 6px; }
+  .shot li code.ext { background: #fff; box-shadow: inset 0 0 0 1.5px #A4A8AE; color: var(--basic-500); }
+  .legend { font-size: 20px; color: var(--basic-500); margin-top: 14px; display: flex; gap: 18px; justify-content: flex-end; }
+  .legend code { font-family: inherit; font-weight: 700; padding: 0 8px; border-radius: 6px; background: var(--basic-50); color: var(--basic-900); }
+  .legend code.ext { background: #fff; box-shadow: inset 0 0 0 1.5px #A4A8AE; color: var(--basic-500); }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-top: 48px; align-items: start; }
+  .phone { display: flex; gap: 28px; }
+  .phone img { width: 230px; border-radius: 22px; box-shadow: 0 0 0 1px var(--basic-200); }
+  .built { margin-top: 28px; border-top: 2px solid var(--basic-900); padding-top: 16px; }
+  .built h4 { font-size: 24px; font-weight: 800; }
+  .built ul { list-style: none; margin-top: 8px; }
+  .built li { font-size: 21px; padding: 5px 0; color: var(--basic-700); }
+  .why { background: var(--basic-50); border-radius: 20px; padding: 36px 40px; }
+  .why h3 { font-size: 30px; font-weight: 700; }
+  .why ol { margin-top: 16px; padding-left: 28px; }
+  .why li { font-size: 23px; line-height: 1.5; color: var(--basic-700); padding: 6px 0; }
+  .why li b { color: var(--basic-900); }
+</style></head>
+<body><div class="board">
+  <header>
+    <div>
+      <h1>반려견이 타면 차가 먼저 챙기는 펫 드라이브</h1>
+      <p>달리는 동안 멀미를 부르는 조건을 재고, 정차 중에는 사실로 안심시키는 Pleos Connect 앱</p>
+    </div>
+    <div><div class="sdk"><em>사용 SDK</em><span>Vehicle</span><span>NaviHelper</span><span>TextToSpeech</span><span>SpeechToText</span><span>FusedLocation</span></div><div class="legend"><span><code>조회·내비·음성</code> 지금 사용 가능</span><span><code class="ext">set-제어</code> 제어 SDK 공개 시 확장</span></div></div>
+  </header>
+
+  <div class="row">
+    <div class="shot">
+      <img src="../png/04c-driving-high.png">
+      <h3><small>핵심</small>주행 중 멀미 위험을 계산하고 차가 대응해요</h3>
+      <ul>
+        <li><code>register-brake-pedal-status</code>급가감속 감지</li>
+        <li><code>SpeechToText</code>보호자 음성 “콩이 헥헥거려” → 점수에 반영</li>
+        <li><code class="ext">set-window-position</code><code class="ext">set-hvac-dual</code>뒷창문 환기, 뒷좌석 공조</li>
+        <li><code>TextToSpeech</code><code>NaviHelper</code>음성 코칭, 반려견 휴게소 경유지</li>
+      </ul>
+    </div>
+    <div class="shot">
+      <img src="../png/01-guard-start.png">
+      <h3><small>정차</small>켜기 전에 차 상태를 읽어요</h3>
+      <ul>
+        <li><code>get-hvac-temperature-current</code>차 안 온도</li>
+        <li><code>get-fuel-percent</code>연료·배터리로 유지 가능 시간 계산</li>
+        <li><code>get-current-seat-occupancy</code>뒷좌석 탑승 확인</li>
+      </ul>
+    </div>
+    <div class="shot">
+      <img src="../png/02-guard-active.png">
+      <h3><small>작동</small>바깥 사람에게 약속 대신 사실을 보여 줘요</h3>
+      <ul>
+        <li><code class="ext">set-hvac-power</code><code class="ext">set-door-lock</code>22℃ 유지, 문 잠금</li>
+        <li><code class="ext">set-ambient-light-brightness-color</code>무드등으로 밖에 상태 표시</li>
+        <li>차 안 온도 1분 기록 → 오해받으면 증거로</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row2">
+    <div class="shot">
+      <img src="../png/03-guard-danger.png">
+      <h3><small>위험</small>에어컨이 꺼지면 차가 스스로 대응해요</h3>
+      <ul>
+        <li><code class="ext">set-window-position</code><code class="ext">set-cabin-light-switch</code>환기, 반려견이 밖에서 보이게</li>
+        <li>서버 → 보호자 반복 전화, 안심번호 표시</li>
+      </ul>
+    </div>
+    <div class="phone">
+      <img src="../png/05-phone.png">
+      <div class="shot"><h3><small>보호자</small>휴대폰으로 실시간 확인</h3>
+        <ul><li>1분마다 온도 기록</li><li>오해를 받으면 기록으로 해명</li><li><code>SpeechToText</code>도착 후 컨디션 기록</li></ul>
+        <div class="built"><h4>이미 구현한 것</h4>
+          <ul><li>멀미 위험 점수·대응 정책 로직 (Java)</li><li>테스트 23개 통과, 주행 기록 재생 데모</li><li>Pleos SDK 앱, Pleos 에뮬레이터 실행</li><li>시뮬레이터, 시연 영상</li></ul></div>
+      </div>
+    </div>
+    <div class="why">
+      <h3>기존 펫 모드와 무엇이 다른가</h3>
+      <ol>
+        <li>테슬라·현대·기아의 펫 모드는 정차 중 기능, 우리는 주행 중 멀미까지</li>
+        <li>운전 습관, 공조, 창문, 휴식 경로를 함께 조정해요</li>
+        <li>바깥 사람에게 센서로 확인한 사실만 보여 줘요</li>
+        <li>Pleos 앱이라 탑재 차종이 늘면 함께 넓어져요</li>
+      </ol>
+    </div>
+  </div>
+</div></body></html>

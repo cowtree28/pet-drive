@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  펫 드라이브 — Pleos Connect 권한 선언
+  기준: 공모전 온라인 설명회(2026-10-28), Pleos 권한 문서
+  - 조회·내비·음성·위치: 공모전 단계에서 선언만으로 에뮬레이터 호출 가능
+  - CONTROL_CAR_*: 차량 제어 SDK 공개 범위 확정 전. 공개되면 확장 단계 기능에서 사용
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pleos Connect는 자동차용 안드로이드. 일반 기기에서도 데모 모드로 설치되게 required=false -->
+    <uses-feature android:name="android.hardware.type.automotive" android:required="false" />
+
+    <!-- 속도: Vehicle SDK에 없어 안드로이드 CarPropertyManager로 읽는다 -->
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />
+
+    <!-- Vehicle 조회 -->
+    <uses-permission android:name="pleos.car.permission.CAR_CLIMATE" />   <!-- 차 안 온도, 공조 상태 -->
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />     <!-- 브레이크 페달 -->
+    <uses-permission android:name="pleos.car.permission.CAR_ENERGY" />    <!-- 연료, EV 배터리 -->
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />     <!-- 문 잠금 상태 -->
+    <uses-permission android:name="pleos.car.permission.CAR_WINDOWS" />   <!-- 창문 위치 -->
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />     <!-- 좌석 탑승 -->
+    <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />    <!-- 조명 상태 -->
+
+    <!-- Vehicle 제어 (확장 단계: 제어 SDK 공개 시) -->
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_CLIMATE" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_WINDOWS" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_DOORS" />
+    <uses-permission android:name="pleos.car.permission.CONTROL_CAR_LIGHTS" />
+
+    <!-- NaviHelper: 경로 정보, 반려견 휴게소 경유지 설정 -->
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE" />
+    <uses-permission android:name="pleos.car.permission.NAVI_ROUTE_SEARCH" />
+
+    <!-- 음성 안내, 컨디션 기록 -->
+    <uses-permission android:name="pleos.car.permission.TTS_SERVICE" />
+    <uses-permission android:name="pleos.car.permission.STT_SERVICE" />
+
+    <!-- 위치·속도 (dangerous: 실행 중 권한 요청 필요) -->
+    <uses-permission android:name="pleos.car.permission.FUSED_LOCATION" />
+
+    <!-- 바깥 온도(기상청), 보호자 알림 서버 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:label="펫 드라이브"
+        android:allowBackup="false"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <!-- 주행 중 화면은 Distraction Optimization 선언 대상 (Pleos 주행 규제 정책) -->
+        <activity
+            android:name="ai.petdrive.app.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
+            <!-- 주행 중에도 화면을 띄우는 Distraction Optimization 선언 (짧은 텍스트, 영상 없음) -->
+            <meta-data android:name="distractionOptimized" android:value="true" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
