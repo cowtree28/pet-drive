@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Jua;src:url(Jua-Regular.ttf)}
+@font-face{font-family:Asta;src:url(../screens/fonts/AstaSans.ttf)}
+body{word-break:keep-all;margin:0;width:1920px;height:1080px;background:#F7F8FA;font-family:Asta;display:flex;align-items:center;justify-content:center}
+.c{width:1440px}
+.k{font-size:34px;font-weight:700;color:#686A72;letter-spacing:2px}
+.big{font-family:Jua;font-size:104px;line-height:1.25;color:#131417;margin-top:28px;letter-spacing:-1px}
+.big em{font-style:normal;color:#E5482B}
+.s{font-size:38px;color:#44464E;margin-top:44px;line-height:1.6}
+.src{font-size:24px;color:#9C9EA6;margin-top:48px}
+.row{display:flex;gap:32px;margin-top:56px}
+.it{flex:1;background:#fff;border-radius:28px;padding:40px 38px;box-shadow:0 0 0 2px #E0E1E6}
+.it b{display:block;font-family:Jua;font-size:50px;color:#131417;white-space:nowrap}
+.it span{display:block;font-size:30px;color:#44464E;margin-top:16px;line-height:1.5}
+.n{font-family:Jua;font-size:40px;color:#02A956}
+.logo{display:flex;align-items:center;gap:22px}
+.logo img{width:96px;height:96px;border-radius:22px}
+.logo b{font-family:Jua;font-size:80px;font-weight:400;color:#131417}
+</style></head><body><div class="c" id="c"></div>
+<script>
+const C={
+ a:`<div class="k">왜 필요할까요</div><div class="big">반려견과 외출하는 보호자<br><em>10명 중 7명</em>은 자가용을 탑니다</div><div class="s">강아지는 차멀미를 자주 합니다. 하지만 운전하는 보호자는 앞만 봐야 해서<br>뒷좌석의 강아지가 힘들어하는지 알아채기 어렵습니다.</div><div class="src">KB경영연구소 2021 (반려동물 외출 시 자가용 69.7%), 한국관광공사 2022 (동반 여행 시 자가용 79.3%)</div>`,
+ b:`<div class="k">지금 차는 무엇을 해 줄까요</div><div class="big">차의 펫 모드는<br><em>세워 둔 차</em>만 지킵니다</div><div class="s">테슬라, 현대·기아의 펫 모드는 주차 중 에어컨을 켜 두는 기능입니다.<br>달리는 동안 강아지의 멀미를 챙기는 기능은 없습니다.</div>`,
+ c:`<div class="logo"><img src="logo.svg"><b>펫 드라이브는</b></div><div class="row">
+ <div class="it"><div class="n">달리는 동안</div><b>멀미 위험을 잽니다</b><span>급정거, 쉬지 않고 달린 시간, 차 안 온도로 점수를 매기고 부드러운 운전을 음성으로 권합니다</span></div>
+ <div class="it"><div class="n">위험해지면</div><b>쉴 곳을 잡아 줍니다</b><span>반려견 놀이터가 있는 휴게소를 내비 경유지에 바로 넣습니다</span></div>
+ <div class="it"><div class="n">잠깐 세워 두면</div><b>차 안을 지킵니다</b><span>에어컨이 꺼져 더워지면 몇 분 뒤 위험한지 알려 주고 보호자를 부릅니다</span></div></div>
+ <div class="s" style="font-size:30px;color:#686A72">지금부터 Pleos Connect 에뮬레이터에서 실제 앱을 실행한 화면입니다.</div>`};
+document.getElementById('c').innerHTML=C[location.hash.slice(1)];
+</script></body></html>
