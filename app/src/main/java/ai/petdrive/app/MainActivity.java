@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ai.petdrive.core.CabinHeat;
 import ai.petdrive.core.CarePolicy;
 import ai.petdrive.core.LevelSmoother;
 import ai.petdrive.core.MotionRiskScorer;
@@ -47,6 +48,10 @@ public final class MainActivity extends Activity {
     private CarSignals signals;
     private RestStopNavi navi;
     private VoiceInput voice;
+    private OutsideWeather weather;
+    private double outsideC = 33; // 데모 시나리오 값. Pleos 차량에서는 FusedLocation 위치의 실제 기온으로 바뀐다
+    private boolean outsideReal, outsideDemo;
+    private long guardStartMs;
     private boolean carMode, tripStarted;
     private long carStartMs;
     private TextView clock, sourceLabel;
@@ -74,6 +79,7 @@ public final class MainActivity extends Activity {
     private double guardTemp = 24.5;
     private RingView guardRing;
     private View gDot;
+    private TextView gOutside, gOutsideNote;
     private TextView gState, gSub, gGone, gCall, gToggle;
     private LinearLayout gSide, gFeatures, gLog, gRecords, gDanger, gCallbox;
     private final List<String[]> tempLog = new ArrayList<>();
@@ -114,6 +120,7 @@ public final class MainActivity extends Activity {
         if (signals != null) signals.stop();
         if (navi != null) navi.stop();
         if (voice != null) voice.stop();
+        if (weather != null) weather.stop();
         speaker.release();
         super.onDestroy();
     }
@@ -121,9 +128,7 @@ public final class MainActivity extends Activity {
     // ---------- 차량 신호 (Pleos) ----------
 
     private void startCar() {
-        if (checkSelfPermission("android.car.permission.CAR_SPEED") != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{"android.car.permission.CAR_SPEED"}, 1);
-        }
+        requestPermissions(new String[]{"android.car.permission.CAR_SPEED", "pleos.car.permission.FUSED_LOCATION"}, 1);
         carStartMs = android.os.SystemClock.elapsedRealtime();
         signals = new CarSignals(new CarSignals.Listener() {
             @Override public void onSpeed(float kmh) {
@@ -161,6 +166,11 @@ public final class MainActivity extends Activity {
             @Override public void onStatus(String text) { aAsk.setText("●  " + text); }
         });
         voice.start(this);
+        weather = new OutsideWeather(new OutsideWeather.Listener() {
+            @Override public void onOutsideTemp(double c) { if (outsideDemo) return; outsideC = c; outsideReal = true; renderGuard(); }
+            @Override public void onStatus(String text) { status(text); }
+        });
+        weather.start(this);
         handler.post(carTick);
     }
 
@@ -563,10 +573,11 @@ public final class MainActivity extends Activity {
         aside.setPadding(36, 0, 0, 0);
         TextView ok = Ui.text(this, font, 20, Ui.GRAY, true);
         ok.setText("바깥");
-        TextView ov = Ui.text(this, font, 64, Ui.TEXT2, true);
-        ov.setText("33℃");
+        gOutside = Ui.text(this, font, 64, Ui.TEXT2, true);
+        gOutsideNote = Ui.text(this, font, 16, Ui.LIGHT, false);
         aside.addView(ok);
-        aside.addView(ov);
+        aside.addView(gOutside);
+        aside.addView(gOutsideNote);
         gGone = asideKv(aside, "보호자가 떠난 지");
         gCall = asideKv(aside, "보호자");
         ringArea(left, guardRing, aside);
@@ -611,6 +622,7 @@ public final class MainActivity extends Activity {
         gSide.addView(gToggle);
         LinearLayout demo = demoRow(gSide);
         addChip(demo, "에어컨 멈춤", v -> { acOn = false; renderGuard(); });
+        addChip(demo, "한여름 33℃", v -> { outsideC = 33; outsideReal = false; outsideDemo = true; renderGuard(); });
         renderGuard();
         return card(left, gSide);
     }
@@ -630,6 +642,7 @@ public final class MainActivity extends Activity {
         guardOn = !guardOn;
         if (guardOn) {
             guardMin = 0; guardTemp = carMode ? cabin : 24.5; acOn = true; tempLog.clear();
+            guardStartMs = System.currentTimeMillis();
             handler.postDelayed(guardTick, 1000);
         } else handler.removeCallbacks(guardTick);
         renderGuard();
@@ -639,8 +652,10 @@ public final class MainActivity extends Activity {
     private final Runnable guardTick = new Runnable() {
         @Override public void run() {
             guardMin++;
-            guardTemp = acOn ? Math.max(22.0, guardTemp - (guardTemp - 22) * 0.35) : guardTemp + 0.9;
-            tempLog.add(0, new String[]{clock.getText().toString(), String.format(Locale.KOREA, "%.1f℃", guardTemp)});
+            // 바깥 기온 기준 어림 (core/CabinHeat). 실제 차량에서는 실내 온도 신호가 들어오면 그 값으로 덮어쓴다
+            guardTemp = CabinHeat.nextMinute(guardTemp, outsideC, acOn, 22.0);
+            String at = new java.text.SimpleDateFormat("HH:mm", Locale.KOREA).format(new java.util.Date(guardStartMs + guardMin * 60_000L)); // 1초 = 1분 시연 시각
+            tempLog.add(0, new String[]{at, String.format(Locale.KOREA, "%.1f℃", guardTemp)});
             if (tempLog.size() > 5) tempLog.remove(5);
             renderGuard();
             if (guardOn) handler.postDelayed(this, 1000);
@@ -654,15 +669,21 @@ public final class MainActivity extends Activity {
         if (clock != null) setClock(guardOn ? guardMin : 0);
         if (!guardOn) guardRing.set(0, Ui.INK, temp, "지금 차 안", "");
         else if (danger) guardRing.set(1, Ui.RED, temp, "반려견이 있는 차 안", "보호자를 부르는 중");
+        else if (!acOn) {
+            int m = CabinHeat.minutesUntil(guardTemp, outsideC, false, 22.0, 27.0);
+            guardRing.set(left / 20f, Ui.AMBER, temp, "반려견이 있는 차 안", m >= 0 ? "약 " + m + "분 뒤 27℃" : "에어컨 꺼짐");
+        }
         else guardRing.set(left / 20f, Ui.GREEN, temp, "반려견이 있는 차 안", "다음 확인까지 " + left + "분");
+        gOutside.setText(carMode && !outsideReal && !outsideDemo ? "-" : String.format(Locale.KOREA, "%.0f℃", outsideC));
+        gOutsideNote.setText(outsideDemo || !carMode ? "시연 값" : outsideReal ? "현재 위치 기온" : "위치 확인 중");
         gSub.setVisibility(guardOn ? View.GONE : View.VISIBLE);
         if (!guardOn && carMode) guardTemp = cabin; // 꺼져 있을 때는 지금 차 안 온도 그대로
         temp = String.format(Locale.KOREA, "%.1f℃", guardTemp);
         if (!guardOn) guardRing.set(0, Ui.INK, temp, "지금 차 안", "");
-        gState.setText(!guardOn ? "콩이" : danger ? "에어컨 멈춤 · 차 안 온도 상승" : "반려견 탑승 중 · 에어컨 켜짐");
+        gState.setText(!guardOn ? "콩이" : danger ? "에어컨 멈춤 · 차 안 온도 상승" : !acOn ? "에어컨 꺼짐 · 온도 오르는 중" : "반려견 탑승 중 · 에어컨 켜짐");
         gState.setTextColor(danger ? Ui.RED : Ui.INK);
         gDot.setVisibility(guardOn ? View.VISIBLE : View.GONE);
-        ((android.graphics.drawable.GradientDrawable) gDot.getBackground()).setColor(danger ? Ui.RED : Ui.GREEN);
+        ((android.graphics.drawable.GradientDrawable) gDot.getBackground()).setColor(danger ? Ui.RED : !acOn ? Ui.AMBER : Ui.GREEN);
         gGone.setText(guardOn ? guardMin + "분" : "-");
         gCall.setText(danger ? "전화하는 중" : guardOn ? "휴대폰 확인 중" : "-");
         gCall.setTextColor(danger ? Ui.RED : Ui.INK);
