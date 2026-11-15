@@ -1,0 +1,8 @@
+build/
+design/video/frames/
+design/screens/__pycache__/
+.gstack/
+submit/
+.gradle/
+local.properties
+app/build/
