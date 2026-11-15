@@ -130,7 +130,7 @@ segs = []
 for name, fn in [('s1', lambda o: intro(o, 6.5)),
                  ('s2r', roll),
                  ('s2', lambda o: build(o, 'a', [2.2, 3.0, 3.8], fade_in=False)),
-                 ('s3', lambda o: build(o, 'b', [3.0, 2.8, 3.8])),
+                 ('s3', lambda o: build(o, 'b', [2.6, 4.2])),
                  ('s4', lambda o: build(o, 'c', [3.0, 2.6, 2.6, 4.0])),
                  ('s5', demo),
                  ('s6', lambda o: intro(o, 6.0, outro=True))]:
