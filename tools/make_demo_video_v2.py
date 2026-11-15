@@ -101,11 +101,28 @@ def demo(out):
          '-map', '[v]', '-c:v', 'libx264', '-crf', '21', '-pix_fmt', 'yuv420p', out])
 
 
+def build(out, card_id, holds):
+    """읽는 순서대로 내용이 하나씩 나타난다 (b-<카드>-<단계>.png를 차례로 겹쳐 넘김)."""
+    xf = 0.35
+    args, chain = [], []
+    for i, h in enumerate(holds):
+        args += ['-loop', '1', '-t', str(h + xf), '-i', P(f'b-{card_id}-{i}.png')]
+        chain.append(f'[{i}:v]scale=1920:1080,fps=30,format=yuv420p[s{i}]')
+    last, off = 's0', holds[0]
+    for i in range(1, len(holds)):
+        chain.append(f'[{last}][s{i}]xfade=transition=fade:duration={xf}:offset={off - xf}[x{i}]')
+        last, off = f'x{i}', off + holds[i]
+    total = sum(holds)
+    chain.append(f'[{last}]fade=t=in:st=0:d=0.4,fade=t=out:st={total - 0.4}:d=0.4,trim=duration={total}[v]')
+    run(args + ['-filter_complex', ';'.join(chain), '-map', '[v]', '-c:v', 'libx264', '-crf', '20',
+                '-pix_fmt', 'yuv420p', out])
+
+
 segs = []
 for name, fn in [('s1', lambda o: intro(o, 6.5)),
-                 ('s2', lambda o: card(o, 'card-a.png', 7.0)),
-                 ('s3', lambda o: card(o, 'card-b.png', 6.0)),
-                 ('s4', lambda o: card(o, 'card-c.png', 8.0)),
+                 ('s2', lambda o: build(o, 'a', [3.0, 3.0, 3.8])),
+                 ('s3', lambda o: build(o, 'b', [3.0, 2.8, 3.8])),
+                 ('s4', lambda o: build(o, 'c', [3.0, 2.6, 2.6, 4.0])),
                  ('s5', demo),
                  ('s6', lambda o: intro(o, 6.0, outro=True))]:
     o = os.path.join(tmp, name + '.mp4')
