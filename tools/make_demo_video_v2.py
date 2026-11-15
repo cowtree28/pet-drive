@@ -101,9 +101,9 @@ def demo(out):
          '-map', '[v]', '-c:v', 'libx264', '-crf', '21', '-pix_fmt', 'yuv420p', out])
 
 
-def roll(out):
+def roll(out, folder='roll'):
     """'7/10'의 7이 숫자판처럼 0에서 7까지 굴러 내려와 멈춘다 (design/logo/roll/ 36장, 1.2초)."""
-    run(['-framerate', '30', '-i', os.path.join(L, 'roll', 'f%03d.png'),
+    run(['-framerate', '30', '-i', os.path.join(L, folder, 'f%03d.png'),
          '-vf', 'scale=1920:1080,format=yuv420p,fade=t=in:st=0:d=0.3', '-c:v', 'libx264', '-crf', '20',
          '-pix_fmt', 'yuv420p', out])
 
@@ -131,7 +131,10 @@ for name, fn in [('s1', lambda o: intro(o, 6.5)),
                  ('s2r', roll),
                  ('s2', lambda o: build(o, 'a', [2.2, 3.0, 3.8], fade_in=False)),
                  ('s3', lambda o: build(o, 'b', [2.6, 4.2])),
+                 ('s3d', lambda o: build(o, 'd', [2.6, 2.4, 2.4, 2.4, 4.0])),
                  ('s4', lambda o: build(o, 'c', [3.0, 2.6, 2.6, 4.0])),
+                 ('s4r', lambda o: roll(o, 'roll-e')),
+                 ('s4e', lambda o: build(o, 'e', [2.6, 3.8], fade_in=False)),
                  ('s5', demo),
                  ('s6', lambda o: intro(o, 6.0, outro=True))]:
     o = os.path.join(tmp, name + '.mp4')
