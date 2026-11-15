@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Asta;src:url(../screens/fonts/AstaSans.ttf)}
+body{margin:0;width:1920px;height:1080px;background:#F7F8FA;font-family:Asta;word-break:keep-all;display:flex;align-items:center;justify-content:center;color:#131417}
+.c{width:1400px}
+.k{font-size:30px;font-weight:700;color:#686A72}
+.h{font-size:76px;font-weight:800;line-height:1.3;margin-top:22px;letter-spacing:-1.5px}
+.s{opacity:0;flex:1 1 0;min-width:0;display:flex}.s>.box{flex:1}.on{opacity:1}
+.row{display:flex;gap:40px;margin-top:64px}
+.box{flex:1 1 0;min-width:0;background:#fff;border-radius:32px;padding:48px 52px;box-shadow:0 0 0 2px #E0E1E6}
+.box .t{font-size:30px;color:#686A72;font-weight:700}
+.box .v{font-size:58px;font-weight:800;margin-top:14px;letter-spacing:-1px}
+.box .d{font-size:28px;color:#44464E;margin-top:16px;line-height:1.5}
+.box.no{background:#131417;box-shadow:none}.box.no .t{color:#9C9EA6}.box.no .v{color:#fff}.box.no .d{color:#C7C9CE}
+.src{font-size:22px;color:#9C9EA6;margin-top:40px}
+.big{font-size:180px;font-weight:800;letter-spacing:-6px;line-height:1}
+.big small{font-size:64px;letter-spacing:0;color:#686A72;font-weight:700}
+.n{font-size:28px;color:#686A72;font-weight:700}
+</style></head><body><div class="c" id="c"></div>
+<script>
+const [card,step]=location.hash.slice(1).split('-');const n=+step;
+const S=(i,html)=>`<div class="s ${n>=i?'on':''}">${html}</div>`;
+const C={
+a:`<div class="k">왜 필요할까요</div>
+ <div style="display:flex;align-items:flex-end;gap:56px;margin-top:30px">
+  <div class="big">7<small>/10</small></div>
+  <div class="h" style="margin:0 0 14px">반려견과 외출하는 보호자는<br>대부분 자가용을 탑니다</div></div>
+ <div class="row">${S(1,`<div class="box"><div class="t">반려견은</div><div class="v">차멀미를 자주 합니다</div><div class="d">급정거, 오래 달리기, 더운 차 안이 멀미를 부릅니다</div></div>`)}
+ ${S(2,`<div class="box"><div class="t">운전하는 보호자는</div><div class="v">알아채기 어렵습니다</div><div class="d">앞을 봐야 해서 뒷좌석을 살필 수 없습니다</div></div>`)}</div>
+ <div class="src">KB경영연구소 2021 (반려동물 외출 시 자가용 69.7%)</div>`,
+b:`<div class="k">지금 차는 무엇을 해 줄까요</div><div class="h">차의 펫 모드가 챙기는 순간은<br>한 가지뿐입니다</div>
+ <div class="row">${S(1,`<div class="box"><div class="t">세워 둔 차</div><div class="v">펫 모드가 있습니다</div><div class="d">테슬라, 현대·기아: 주차 중 에어컨 유지</div></div>`)}
+ ${S(2,`<div class="box no"><div class="t">달리는 차</div><div class="v">아무것도 없습니다</div><div class="d">멀미를 챙기는 기능은 찾지 못했습니다</div></div>`)}</div>`,
+c:`<div class="k">펫 드라이브는</div><div class="h">달리는 동안부터 세워 둘 때까지<br>차가 반려견을 챙깁니다</div>
+ <div class="row">${S(1,`<div class="box"><div class="n">달리는 동안</div><div class="v">멀미 위험을 잽니다</div><div class="d">급정거·쉬지 않은 시간·차 안 온도로 점수를 매기고 음성으로 알립니다</div></div>`)}
+ ${S(2,`<div class="box"><div class="n">위험해지면</div><div class="v">쉴 곳을 잡습니다</div><div class="d">반려견 놀이터가 있는 휴게소를 내비 경유지에 넣습니다</div></div>`)}
+ ${S(3,`<div class="box"><div class="n">세워 두면</div><div class="v">차 안을 지킵니다</div><div class="d">에어컨이 꺼지면 몇 분 뒤 위험한지 알리고 보호자를 부릅니다</div></div>`)}</div>`};
+document.getElementById('c').innerHTML=C[card];
+</script></body></html>
